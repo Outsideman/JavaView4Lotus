@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table selectionBar="standart" resizeColumnIndex="0" rowColor="#FFFFFF"
+	rowColorAlt="#F8F8F8">
+	<header>
+		<column>
+			<title>#</title>
+		</column>
+	</header>
+</table>

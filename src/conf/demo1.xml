@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table selectionBar="dialog" resizeColumnIndex="" rowColor="#FFFFFF"
+	rowColorAlt="#F8F8F8">
+	<header>
+		<column>
+			<alignment></alignment>
+			<fontColor>#008080</fontColor>
+			<fontFace></fontFace>
+			<fontPointSize></fontPointSize>
+			<fontStyle></fontStyle>
+			<headerAlignment></headerAlignment>
+			<headerFontColor></headerFontColor>
+			<headerFontFace></headerFontFace>
+			<headerFontPointSize></headerFontPointSize>
+			<headerFontStyle></headerFontStyle>
+			<listSep></listSep>
+			<category>true</category>
+			<icon></icon>
+			<resize></resize>
+			<resortAscending></resortAscending>
+			<resortDescending></resortDescending>
+			<response></response>
+			<secondaryResortColumnIndex></secondaryResortColumnIndex>
+			<secondaryResortDescending></secondaryResortDescending>
+			<sorted></sorted>
+			<caseSensitiveSort></caseSensitiveSort>
+			<accentSensitiveSort></accentSensitiveSort>
+			<sortDescending></sortDescending>
+			<showTwistie></showTwistie>
+			<title></title>
+			<numberAttrib></numberAttrib>
+			<numberDigits></numberDigits>
+			<timeDateFmt></timeDateFmt>
+			<dateFmt></dateFmt>
+			<timeFmt></timeFmt>
+			<width>30</width>
+			<dataType></dataType>
+		</column>
+		<column>
+			<title>LastName</title>
+			<sorted>true</sorted>
+			<resortAscending>true</resortAscending>
+			<resortDescending>true</resortDescending>
+		</column>
+		<column>
+			<title>FirstName</title>
+			<resortAscending>true</resortAscending>
+			<resortDescending>true</resortDescending>
+			<secondaryResortColumnIndex>2</secondaryResortColumnIndex>
+		</column>
+		<column>
+			<title>Born</title>
+			<resortAscending>true</resortAscending>
+		</column>
+		<column>
+			<title>Known for</title>
+			<width>200</width>
+		</column>
+		<column>
+			<title>Info</title>
+			<width>370</width>
+		</column>
+	</header>
+	<data>
+		<notesView dbKey="" dbServer="" dbFile="" viewName="(ByStaffID)" singleCategory="" limit="1">
+			<row>
+				<columnValue>Height:</columnValue>
+				<columnValue>#height</columnValue>
+			</row>
+			<row>
+				<columnValue>Weight:</columnValue>
+				<columnValue>#weight</columnValue>
+			</row>
+			<row>
+				<columnValue>Pressure:</columnValue>
+				<columnValue>#pressure</columnValue>
+			</row>
+		</notesView>
+		<notesSearch dbKey="" dbServer="" dbFile="" searchString="" dateTime="" limit="">
+			<row>
+				<value name="id">@ParentDocumentUNID</value>
+				<columnValue>@Implode(Path;"\\")</columnValue>
+				<columnValue>#LastName</columnValue>
+				<columnValue>#FirstName</columnValue>
+				<columnValue>#MiddleName</columnValue>
+				<columnValue>#Title</columnValue>
+				<columnValue>
+					<notesView dbKey="" dbServer="" dbFile="#dblink_path" viewName="(ConnectByID)" singleCategory="#doclink_UNID" limit="1">
+						<columnValue>#Phone</columnValue>
+					</notesView>
+				</columnValue>
+			</row>
+		</notesSearch>
+		<row>
+			<columnValue>IMDB\Most Popular Females/Males</columnValue>
+			<columnValue>DiCaprio</columnValue>
+			<columnValue>Leonardo</columnValue>
+			<columnValue>1974</columnValue>
+			<columnValue>Actor, Producer, Writer</columnValue>
+			<columnValue>Leonardo DiCaprio is an American actor whose portrayal of doomed suitor Jack Dawson in Титаник (1997) made him a generation's definition of a heartthrob.</columnValue>
+		</row>
+		<row>
+			<columnValue>IMDB\Most Popular Females/Males</columnValue>
+			<columnValue>Cumberbatch</columnValue>
+			<columnValue>Benedict</columnValue>
+			<columnValue>1976</columnValue>
+			<columnValue>Actor, Producer, Soundtrack</columnValue>
+			<columnValue>Benedict Timothy Carlton Cumberbatch was born and raised in London, England, UK. His parents, Timothy Carlton and Wanda Ventham, are both actors. He attended Brambletye School and Harrow School. Whilst at Harrow, he had an arts scholarship and painted large oil canvases.</columnValue>
+		</row>
+		<row>
+			<columnValue>IMDB\Most Popular Females/Males</columnValue>
+			<columnValue>Depp</columnValue>
+			<columnValue>Johnny</columnValue>
+			<columnValue>1963</columnValue>
+			<columnValue>Actor, Producer, Soundtrack</columnValue>
+			<columnValue>Born John Christopher Depp in Owensboro, Kentucky, on June 9, 1963, Johnny Depp was raised in Florida. He dropped out of school at age 15 in the hopes of becoming a rock musician. He fronted a series of garage bands including The Kids, which once opened for Iggy Pop.</columnValue>
+		</row>
+	</data>
+</table>
