@@ -1,5 +1,4 @@
 import javax.swing.JApplet;
-import lotus.domino.*;
 
 public class Application extends JApplet {
 	private Controller controller;
@@ -8,13 +7,8 @@ public class Application extends JApplet {
 		controller = new Controller(this);
 	}
 
-	public void start() {
-		controller.resize();
-	}
-
-	public void loadXML(String xml) {
-		controller.loadXML(xml);
-		//controller.resize();
+	public Controller getController() {
+		return controller;
 	}
 	
 }

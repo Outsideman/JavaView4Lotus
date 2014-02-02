@@ -1,12 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -22,7 +20,9 @@ import org.xml.sax.SAXException;
 
 public class Controller {
 	private Application app;
-	private JDataTable tableUI;
+	private JScrollPane scrollpane;
+	private TableUI tableUI;
+	private TableSelectionUI tableSelectionUI;
 	private org.w3c.dom.Document document = null;
 
 	Controller(Application app) {
@@ -31,10 +31,11 @@ public class Controller {
 	}
 
 	public void initTable() {
-		tableUI = new JDataTable();
-		//app.getContentPane().add(new JScrollPane(tableUI), BorderLayout.CENTER);
-		app.getContentPane().add(JDataTable.createStripedJScrollPane(tableUI), BorderLayout.CENTER);
 		
+		//initialize main table
+		tableUI = new TableUI();
+		
+		//load preferences
 		String xml = getParam("xml");
 		if (!"".equals(xml)) {
 			loadXML(xml);
@@ -47,10 +48,20 @@ public class Controller {
 			}
 		}
 		
-	}
-
-	public void resize() {
-		tableUI.autoresize();
+		//adding table to applet
+		scrollpane = new JScrollPane(tableUI);
+		app.getContentPane().add(scrollpane, BorderLayout.CENTER);
+		
+		//adding selection table to applet
+		if (tableUI.getData().hasSelection()) {
+			tableSelectionUI = new TableSelectionUI(tableUI);
+			tableUI.setSelectionTable(tableSelectionUI);
+			scrollpane.setRowHeaderView(tableSelectionUI);
+			scrollpane.setCorner(JScrollPane.UPPER_LEFT_CORNER, tableSelectionUI.getTableHeader());
+		} else {
+			scrollpane.setRowHeaderView(null);
+		}
+		
 	}
 
 	public String getParam(String name) {
@@ -135,12 +146,9 @@ public class Controller {
 
 		// set selection bar width
 		String selectionType = root.getAttribute("selectionBar");
-		if ("standart".equals(selectionType)) {
+		if ("true".equals(selectionType)) {
 			table.setSelection(true);
 			table.setSelectionWidth(DataTable.SELECTION_STANDART);
-		} else if ("dialog".equals(selectionType)) {
-			table.setSelection(true);
-			table.setSelectionWidth(DataTable.SELECTION_DIALOG);
 		} else {
 			table.setSelection(false);
 		}
@@ -203,6 +211,7 @@ public class Controller {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void processColumn(Node node) {
 		DataColumn column = tableUI.getData().getHeader().appendColumn("");
 		HashMap attr = new HashMap();

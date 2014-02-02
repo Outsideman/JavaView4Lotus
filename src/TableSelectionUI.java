@@ -1,11 +1,11 @@
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -17,27 +17,29 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-public class JDataSelectionTable extends JTable implements ChangeListener {
-	private JDataTable jDataTable;
+public class TableSelectionUI extends JTable implements ChangeListener {
+	private TableUI tableUI;
 	private boolean selectValue;
 	private ImageIcon selectionIcon;
 
-	JDataSelectionTable(JDataTable jDataTable) {
-		super(new DataSelectionModel((DataTableModel) jDataTable.getModel()));
-		this.jDataTable = jDataTable;
-
+	TableSelectionUI(TableUI tableUI_) {
+		super(new DataSelectionModel((DataTableModel) tableUI_.getModel()));
+		this.tableUI = tableUI_;
+		
+		setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, SystemColor.controlShadow));
 		setFillsViewportHeight(true);
+		setFocusable(false);
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setShowGrid(false);
-
+		setRowHeight(tableUI.getRowHeight());
+		setBackground(tableUI.getBackground());
+		
 		setPreferredSize(new Dimension(DataTable.SELECTION_STANDART,
-				jDataTable.getPreferredSize().height));
-		// TODO
-		// Dimension d = getPreferredSize();
-		// d.width = DataTable.SELECTION_STANDART;
-		// setPreferredSize(d);
-
+				tableUI.getPreferredSize().height));
+		
+		setPreferredScrollableViewportSize(getPreferredSize());
+		
 		getTableHeader().setResizingAllowed(false);
 		getTableHeader().setReorderingAllowed(false);
 
@@ -49,28 +51,28 @@ public class JDataSelectionTable extends JTable implements ChangeListener {
 		column.setHeaderValue(null);
 		column.setCellRenderer(new CellRenderer());
 
-		selectionIcon = jDataTable.getImage("selection.gif");
+		selectionIcon = tableUI.getImage("selection.gif");
 	}
-
-	public void rebuild() {
-		setRowHeight(jDataTable.getRowHeight());
-		setBackground(jDataTable.getBackground());
-
-		((DataSelectionModel) getModel()).fireTableDataChanged();
+	
+	public void updateViewport() {
+		JViewport viewport = (JViewport) getParent();
+		JScrollPane scrollpane = (JScrollPane) viewport.getParent();
+		
+		setPreferredSize(new Dimension(DataTable.SELECTION_STANDART,
+				tableUI.getPreferredSize().height));
+		
+		viewport.setViewPosition(
+				scrollpane.getViewport().getViewPosition());
 	}
-
+	
+	public void fireTableDataChanged() {
+		updateViewport();
+		repaint();
+	}
+	
 	public DataRow getRowAtPoint(MouseEvent e) {
-		DataTableModel tableModel = (DataTableModel) jDataTable.getModel();
+		DataTableModel tableModel = (DataTableModel) tableUI.getModel();
 		return tableModel.getRow(rowAtPoint(e.getPoint()));
-	}
-
-	public void paintComponent(Graphics g) {
-		// TODO repaint after moving the window?
-		super.paintComponent(g);
-
-		Rectangle r = g.getClipBounds();
-		g.setColor(SystemColor.controlShadow);
-		g.drawLine(r.width - 1, r.y, r.width - 1, r.y + r.height);
 	}
 
 	// Keep scrolling of the row table in sync with the main table.
@@ -84,29 +86,12 @@ public class JDataSelectionTable extends JTable implements ChangeListener {
 	}
 
 	// Keep the scrolling of the row table in sync with main table
-	public void stateChanged(ChangeEvent e) {
-		JViewport viewport = (JViewport) e.getSource();
-		JScrollPane scrollPane = (JScrollPane) viewport.getParent();
-
-		// System.out.println("MAIN TABLE:");
-		// System.out.println(scrollPane.getViewport().getViewSize());
-		// JDataTable obj1 = (JDataTable) scrollPane.getViewport().getView();
-		// obj1.setBorder(new LineBorder(Color.GREEN, 2));
-		//
-		// System.out.println("SELECTION TABLE:");
-		// System.out.println(viewport.getViewSize());
-		// JDataSelection obj2 = (JDataSelection) viewport.getView();
-		// obj2.setBorder(new LineBorder(Color.RED, 2));
-
-		// viewport.setViewPosition(new Point(viewport.getViewPosition().x,
-		// scrollPane.getVerticalScrollBar().getValue()));
-
-		scrollPane.getVerticalScrollBar()
-				.setValue(viewport.getViewPosition().y);
+	public void stateChanged(ChangeEvent e) {		
+		updateViewport();
 	}
 
 	/**
-	 * cell renderer
+	 * Cell renderer
 	 */
 	private class CellRenderer extends DefaultTableCellRenderer {
 
@@ -114,7 +99,7 @@ public class JDataSelectionTable extends JTable implements ChangeListener {
 				Object value, boolean selected, boolean hasFocus, int rowIndex,
 				int columnIndex) {
 
-			DataTableModel tableModel = (DataTableModel) jDataTable.getModel();
+			DataTableModel tableModel = (DataTableModel) tableUI.getModel();
 			DataRow row = tableModel.getRow(rowIndex);
 
 			if (row.isInMultipleSelection()) {
